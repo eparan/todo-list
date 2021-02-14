@@ -9,19 +9,21 @@ import { Action } from "./../reducers/TaskReducer";
 import { v1 as uuid } from "uuid";
 
 const AddTaskComponent = () => {
-  const { dispatch } = useContext(TaskContext);
+  const { dispatch, addTaskRequest } = useContext(TaskContext);
   const [description, setDescription] = useState("");
 
   const onAddTask = (e) => {
     e.preventDefault();
-    dispatch({
-      type: Action.ADD_TASK,
-      task: {
+    let task =  {
         id: uuid(),
         isChecked: false,
         created: new Date(),
         description: description,
-      },
+      }
+    addTaskRequest(task);
+    dispatch({
+      type: Action.ADD_TASK,
+      task
     });
     setDescription("");
   };

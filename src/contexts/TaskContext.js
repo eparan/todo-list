@@ -1,50 +1,31 @@
-import React, { createContext, useReducer } from "react";
-import { taskReducer } from "./../reducers/TaskReducer";
-
-const initialTasks = {
-  tasks: [
-    {
-      id: "1cfe7dd0-6e0e-11eb-b8c5-0515c0469388",
-      isChecked: false,
-      created: "2021-02-13T15:14:05.998Z",
-      description: "aaaaa",
-    },
-    {
-      id: "1cfe7dd0-6e0e-11eb-b8c5-0515c0469381",
-      isChecked: true,
-      created: "2021-02-13T15:14:05.998Z",
-      description: "bbbbbb",
-    },
-    {
-      id: "1cfe7dd0-6e0e-11eb-b8c5-0515c0469382",
-      isChecked: true,
-      created: "2021-02-13T15:14:05.998Z",
-      description: "cccccc",
-    },
-    {
-      id: "1cfe7dd0-6e0e-11eb-b8c5-0515c0469383",
-      isChecked: false,
-      created: "2021-02-13T15:14:05.998Z",
-      description: "dddddd",
-    },
-  ],
-};
+import React, { createContext, useReducer, useEffect, useState } from 'react';
+import { taskReducer, Action } from './../reducers/TaskReducer';
+import {
+    getTasksRequest,
+    addTaskRequest
+} from '../firebase/Firebase';
 
 export const TaskContext = createContext();
 
 const TaskContextProvider = (props) => {
-  const [state, dispatch] = useReducer(taskReducer, initialTasks);
-  console.log(state, dispatch);
-  const tasks = state.tasks;
-  // const sortedTasks = tasks;
-  const sortedTasks = tasks.sort((t, f) =>
-    f.isChecked === t.isChecked ? 0 : f.isChecked ? -1 : 1
-  );
-  return (
-    <TaskContext.Provider value={{ tasks, sortedTasks, dispatch }}>
-      {props.children}
-    </TaskContext.Provider>
-  );
-};
+    const [state, dispatch] = useReducer(taskReducer, [])
+    //const [sortedTasks, setTasks] = useState([]);
+    const tasks = state.tasks;
+    console.log(tasks);
 
+    useEffect(()=>{
+        getTasksRequest().then(res=>{
+            // setTasks(res.sort((t, f) =>  (f.isChecked === t.isChecked)? 0 : f.isChecked? -1 : 1))
+            dispatch({
+                type:Action.GET_ALL_TASKS,
+                tasks: res
+            })
+        })
+    },[tasks])
+    return (
+        <TaskContext.Provider value={{ tasks, dispatch, addTaskRequest }}>
+            {props.children}
+        </TaskContext.Provider>
+    )
+}
 export default TaskContextProvider;

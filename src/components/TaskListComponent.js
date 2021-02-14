@@ -13,6 +13,13 @@ import LibraryAddCheckIcon from "@material-ui/icons/LibraryAddCheck";
 import { TaskContext } from "./../contexts/TaskContext";
 import { Action } from "./../reducers/TaskReducer";
 
+import {
+    checkTaskRequest,
+    removeTaskRequest
+} from '../firebase/Firebase';
+
+
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -24,9 +31,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const TaskListComponent = () => {
-  const { sortedTasks, dispatch } = useContext(TaskContext);
+  const { tasks, dispatch } = useContext(TaskContext);
+  const sortedTasks = tasks.sort((t, f) =>  (f.isChecked === t.isChecked)? 0 : f.isChecked? -1 : 1)
   const classes = useStyles();
   const onChecked = (id, isChecked) => {
+    checkTaskRequest(id, isChecked);
     dispatch({
       type: Action.CHECK_TASK,
       task: {
@@ -37,6 +46,7 @@ const TaskListComponent = () => {
   };
 
   const onRemove = (id) => {
+    removeTaskRequest(id);
     dispatch({
       type: Action.REMOVE_TASK,
       task: {
