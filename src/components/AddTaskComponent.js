@@ -4,27 +4,22 @@ import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 
 import { TaskContext } from "./../contexts/TaskContext";
-import { Action } from "./../reducers/TaskReducer";
 
 import { v1 as uuid } from "uuid";
 
 const AddTaskComponent = () => {
-  const { dispatch, addTaskRequest } = useContext(TaskContext);
+  const { addTaskRequest } = useContext(TaskContext);
   const [description, setDescription] = useState("");
 
   const onAddTask = (e) => {
     e.preventDefault();
-    let task =  {
-        id: uuid(),
-        isChecked: false,
-        created: new Date(),
-        description: description,
-      }
+    let task = {
+      id: uuid(),
+      isChecked: false,
+      created: new Date(),
+      description: description,
+    };
     addTaskRequest(task);
-    dispatch({
-      type: Action.ADD_TASK,
-      task
-    });
     setDescription("");
   };
 

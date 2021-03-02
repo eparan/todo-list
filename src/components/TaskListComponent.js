@@ -11,14 +11,8 @@ import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import LibraryAddCheckIcon from "@material-ui/icons/LibraryAddCheck";
 
 import { TaskContext } from "./../contexts/TaskContext";
-import { Action } from "./../reducers/TaskReducer";
 
-import {
-    checkTaskRequest,
-    removeTaskRequest
-} from '../firebase/Firebase';
-
-
+import { checkTaskRequest, removeTaskRequest } from "../firebase/Firebase";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,28 +25,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const TaskListComponent = () => {
-  const { tasks, dispatch } = useContext(TaskContext);
-  const sortedTasks = tasks.sort((t, f) =>  (f.isChecked === t.isChecked)? 0 : f.isChecked? -1 : 1)
+  const { tasks } = useContext(TaskContext);
+  const sortedTasks = tasks.sort((t, f) =>
+    f.isChecked === t.isChecked ? 0 : f.isChecked ? -1 : 1
+  );
   const classes = useStyles();
   const onChecked = (id, isChecked) => {
     checkTaskRequest(id, isChecked);
-    dispatch({
-      type: Action.CHECK_TASK,
-      task: {
-        id,
-        isChecked,
-      },
-    });
   };
 
   const onRemove = (id) => {
     removeTaskRequest(id);
-    dispatch({
-      type: Action.REMOVE_TASK,
-      task: {
-        id,
-      },
-    });
   };
   return (
     <List className={classes.root}>
