@@ -7,6 +7,7 @@ import { TaskContext } from "./../contexts/TaskContext";
 
 const NavbarComponent = () => {
   const { tasks } = useContext(TaskContext);
+
   return (
     <AppBar position="static">
       <Toolbar variant="dense" style={{ justifyContent: "center" }}>
